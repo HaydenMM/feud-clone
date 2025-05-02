@@ -27,6 +27,11 @@
 # ======================================================================================================================
 
 # ======================================================================
+# https://huggingface.co/spaces/anzorq/finetuned_diffusion
+# https://huggingface.co/spaces/pharmapsychotic/CLIP-Interrogator
+# ======================================================================
+
+# ======================================================================
 # Hayden Moore, Carnegie Mellon University, SEI, AI Division
 # David Shriver, Carnegie Mellon University, SEI, AI Division
 # Additional Contributors: Marissa Connor, Keltin Grimes
@@ -201,7 +206,7 @@ class RecoverTrigger(nn.Module):
 
             dataset_embedding = transform(embedd_img)
 
-            similarity_loss = 1 - F.cosine_similarity(torch.clamp(self.trigger, 0, 1).unsqueeze(0).to(device), 
+            similarity_loss = F.cosine_similarity(torch.clamp(self.trigger, 0, 1).unsqueeze(0).to(device), 
                                                       dataset_embedding.unsqueeze(0).to(device), dim=1)
             similarity_loss = similarity_loss.mean()
 
@@ -211,7 +216,7 @@ class RecoverTrigger(nn.Module):
             # else:
             #     loss = loss * 0
             
-            # subtract cosine similarity from the total loss
+            # Less dramatic, subtract cosine similarity from the total loss
             loss -= (0.0025 * similarity_loss)
                 
             loss.backward()
@@ -393,4 +398,3 @@ def main(args: list = None):
 
 if __name__ == "__main__":
     main()
-
